@@ -96,7 +96,8 @@ export const analyzeData = (data: DouyinData[]): AnalysisResult => {
   // 热门话题标签分析
   const hashtagMap: { [key: string]: { count: number; totalLikes: number } } = {};
   data.forEach(item => {
-    const hashtags = item.videoDescription.match(/#\w+/g) || [];
+    const description = String(item.videoDescription || '');
+    const hashtags = description.match(/#\w+/g) || [];
     hashtags.forEach(tag => {
       const cleanTag = tag.replace('#', '');
       if (!hashtagMap[cleanTag]) {
@@ -165,7 +166,7 @@ export const analyzeData = (data: DouyinData[]): AnalysisResult => {
     topPerformingContent: data
       .sort((a, b) => b.likeCount - a.likeCount)
       .slice(0, 5)
-      .map(item => item.videoDescription.substring(0, 50) + '...'),
+      .map(item => String(item.videoDescription || '').substring(0, 50) + '...'),
   };
 
   // 爆款内容特征分析
@@ -188,7 +189,7 @@ export const analyzeData = (data: DouyinData[]): AnalysisResult => {
   };
 
   data.forEach(item => {
-    const description = item.videoDescription;
+    const description = String(item.videoDescription || '');
     const engagement = item.likeCount + item.commentCount + item.shareCount + item.collectCount;
 
     // 标题长度分析
